@@ -1,0 +1,19 @@
+---
+description: PixiJS API
+globs: **/*.{js,ts,jsx,tsx}
+alwaysApply: false
+---
+
+# PixiJS API (authoritative reference)
+
+When working with PixiJS in this project, treat the PixiJS docs (v8) as the source of truth for APIs, class names, option shapes, lifecycle, and best practices.
+
+- Primary index (LLM docs): `https://pixijs.com/llms.txt`
+- Prefer deep links under `https://pixijs.com/8.x/` when citing specifics.
+
+## How to use this rule
+
+- If you’re about to use a PixiJS type/class/method (e.g. `Application`, `Assets`, `Ticker`, `Container`, `Sprite`, `Graphics`, `Text`, `RenderLayers`, `RenderGroups`), verify it exists and matches v8 docs before coding.
+- Use the docs to confirm **resource lifecycle** and **cleanup** patterns (textures, base textures, GPU resources, caching).
+- For performance-sensitive visualizers, consult the docs sections on **performance tips**, **render loop**, **garbage collection**, **culling**, and **cacheAsTexture** before introducing new per-frame allocations.
+
