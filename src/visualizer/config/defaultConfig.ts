@@ -17,8 +17,8 @@ export const defaultConfig: VisualizerConfig = {
     thickness: 4,
   },
   background: {
-    color: 0x000000,
+    color: 0x1ff120,
     imageUrl: "/demo/demo.png", // optional
-    imageAlpha: 0.25,
+    imageAlpha: 0.85,
   },
 };

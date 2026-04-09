@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Application } from "pixi.js";
 import { VisualizerEngine } from "../../visualizer/engine/VisualizerEngine";
 import { defaultConfig } from "../../visualizer/config/defaultConfig";
-import { VisualizerControlsPanel } from "./VisualizerControlsPanel";
-import type { VisualizerMode } from "../../visualizer/engine/types";
 
 type MusicVisualizerProps = {
   demoAudio?: string;
@@ -15,9 +13,6 @@ export function MusicVisualizer({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pixiAppRef = useRef<Application | null>(null);
   const engineRef = useRef<VisualizerEngine | null>(null);
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [mode, setMode] = useState<VisualizerMode>(defaultConfig.mode);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -65,37 +60,9 @@ export function MusicVisualizer({
     };
   }, [demoAudio]);
 
-  const handleTogglePlay = async () => {
-    const engine = engineRef.current;
-    if (!engine) return;
-
-    if (isPlaying) {
-      engine.pause();
-      setIsPlaying(false);
-    } else {
-      await engine.start();
-      setIsPlaying(true);
-    }
-  };
-
-  const handleChangeMode = async (nextMode: VisualizerMode) => {
-    const engine = engineRef.current;
-    if (!engine) return;
-
-    await engine.setMode(nextMode);
-    setMode(nextMode);
-  };
-
   return (
-    <div className="relative w-5/6 h-[70vh] min-h-[500px] overflow-hidden rounded-2xl border border-white/10 bg-white">
-      <div ref={containerRef} className="w-full h-full" />
-
-      <VisualizerControlsPanel
-        isPlaying={isPlaying}
-        mode={mode}
-        onTogglePlay={handleTogglePlay}
-        onChangeMode={handleChangeMode}
-      />
+    <div className="h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl">
+      <div ref={containerRef} className="h-full w-full" />
     </div>
   );
 }
