@@ -21,7 +21,7 @@ export class VisualizerEngine {
   async init() {
     await this.rebuildLayers();
     this.handleResize();
-    window.addEventListener("resize", this.handleResize);
+    this.app.renderer.on("resize", this.handleResize);
   }
 
   async loadDemoAudio(src: string) {
@@ -118,7 +118,7 @@ export class VisualizerEngine {
 
   destroy() {
     this.pause();
-    window.removeEventListener("resize", this.handleResize);
+    this.app.renderer.off("resize", this.handleResize);
 
     for (const layer of this.layers) {
       layer.destroy();

@@ -1,7 +1,7 @@
 import type { VisualizerConfig } from "../engine/types";
 
 export const defaultConfig: VisualizerConfig = {
-  mode: "bars",
+  mode: "radial",
   bars: {
     count: 64,
     color: 0x00e5ff,

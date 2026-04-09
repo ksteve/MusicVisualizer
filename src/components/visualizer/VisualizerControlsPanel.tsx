@@ -1,4 +1,4 @@
-type VisualizerMode = "bars" | "radialBars";
+type VisualizerMode = "bars" | "radial";
 
 type VisualizerControlsPanelProps = {
   isPlaying: boolean;
@@ -87,18 +87,19 @@ export function VisualizerControlsPanel({
         {/* Mode */}
         <Section title="Visualizer Mode">
           <div className="grid grid-cols-2 gap-2">
+
+          <ControlButton
+              active={mode === "radial"}
+              onClick={() => onChangeMode("radial")}
+            >
+              Radial
+            </ControlButton>
+
             <ControlButton
               active={mode === "bars"}
               onClick={() => onChangeMode("bars")}
             >
               Bars
-            </ControlButton>
-
-            <ControlButton
-              active={mode === "radialBars"}
-              onClick={() => onChangeMode("radialBars")}
-            >
-              Radial
             </ControlButton>
           </div>
 

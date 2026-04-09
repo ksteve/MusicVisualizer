@@ -2,18 +2,24 @@ import { useEffect, useRef } from "react";
 import { Application } from "pixi.js";
 import { VisualizerEngine } from "../../visualizer/engine/VisualizerEngine";
 import { defaultConfig } from "../../visualizer/config/defaultConfig";
+import type { VisualizerMode } from "../../visualizer/engine/types";
 
-type MusicVisualizerProps = {
+type Props = {
   demoAudio?: string;
+  isPlaying: boolean;
+  mode: VisualizerMode;
 };
 
 export function MusicVisualizer({
   demoAudio = "/demo/demo.mp3",
-}: MusicVisualizerProps) {
+  isPlaying,
+  mode,
+}: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const pixiAppRef = useRef<Application | null>(null);
+  const appRef = useRef<Application | null>(null);
   const engineRef = useRef<VisualizerEngine | null>(null);
 
+  // Init Pixi + Engine ONCE
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -34,16 +40,13 @@ export function MusicVisualizer({
       }
 
       containerRef.current!.appendChild(app.canvas);
-      pixiAppRef.current = app;
+      appRef.current = app;
 
       const engine = new VisualizerEngine(app, defaultConfig);
       engineRef.current = engine;
 
       await engine.init();
-
-      if (demoAudio) {
-        await engine.loadDemoAudio(demoAudio);
-      }
+      await engine.loadDemoAudio(demoAudio);
     };
 
     void setup();
@@ -53,12 +56,32 @@ export function MusicVisualizer({
       engineRef.current?.destroy();
       engineRef.current = null;
 
-      if (pixiAppRef.current) {
-        void pixiAppRef.current.destroy(true, { children: true });
-        pixiAppRef.current = null;
+      if (appRef.current) {
+        void appRef.current.destroy(true, { children: true });
+        appRef.current = null;
       }
     };
   }, [demoAudio]);
+
+  // React to play/pause
+  useEffect(() => {
+    const engine = engineRef.current;
+    if (!engine) return;
+
+    if (isPlaying) {
+      void engine.start();
+    } else {
+      engine.pause();
+    }
+  }, [isPlaying]);
+
+  // React to mode changes
+  useEffect(() => {
+    const engine = engineRef.current;
+    if (!engine) return;
+
+    void engine.setMode(mode);
+  }, [mode]);
 
   return (
     <div className="h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl">
