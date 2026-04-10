@@ -1,10 +1,14 @@
-type VisualizerMode = "bars" | "radial";
+import type { VisualizerConfig, VisualizerMode } from "../../visualizer/engine/types";
+
+//type VisualizerMode = "bars" | "radial";
 
 type VisualizerControlsPanelProps = {
   isPlaying: boolean;
   mode: VisualizerMode;
   onTogglePlay: () => void;
   onChangeMode: (mode: VisualizerMode) => void;
+  config: VisualizerConfig;
+  updateConfig: (path: string, value: unknown) => void;
 };
 
 type SectionProps = {
@@ -54,6 +58,8 @@ export function VisualizerControlsPanel({
   mode,
   onTogglePlay,
   onChangeMode,
+  config,
+  updateConfig
 }: VisualizerControlsPanelProps) {
   return (
     <div className="flex h-full flex-col gap-4">
@@ -70,7 +76,7 @@ export function VisualizerControlsPanel({
       {/* Scrollable panel content */}
       <div className="flex-1 space-y-4 overflow-y-auto pr-1">
         {/* Transport */}
-        <Section title="Transport">
+        {/* <Section title="Transport">
           <div className="grid grid-cols-2 gap-2">
             <ControlButton active={isPlaying} onClick={onTogglePlay}>
               {isPlaying ? "Pause" : "Play"}
@@ -82,13 +88,13 @@ export function VisualizerControlsPanel({
           <p className="text-xs text-white/50">
             Playback wiring will be connected in the next step.
           </p>
-        </Section>
+        </Section> */}
 
         {/* Mode */}
         <Section title="Visualizer Mode">
           <div className="grid grid-cols-2 gap-2">
 
-          <ControlButton
+            <ControlButton
               active={mode === "radial"}
               onClick={() => onChangeMode("radial")}
             >
@@ -103,13 +109,87 @@ export function VisualizerControlsPanel({
             </ControlButton>
           </div>
 
+          <label className="text-xs text-white/60">Parallax</label>
+          <input
+            type="range"
+            min={0}
+            max={30}
+            value={config.background.motion.parallaxStrength}
+            onChange={(e) =>
+              updateConfig("background.motion.parallaxStrength", Number(e.target.value))
+            }
+            className="w-full"
+          />
+
+          <label className="text-xs text-white/60">Shake</label>
+          <input
+            type="range"
+            min={0}
+            max={30}
+            value={config.background.motion.bassShake}
+            onChange={(e) =>
+              updateConfig("background.motion.bassShake", Number(e.target.value))
+            }
+            className="w-full"
+          />
+
+          <div>
+            <label className="text-xs text-white/60">Bar Count</label>
+            <input
+              type="range"
+              min={16}
+              max={128}
+              step={1}
+              value={config.radial.count}
+              onChange={(e) =>
+                updateConfig("radial.count", Number(e.target.value))
+              }
+              className="w-full"
+            />
+            <div className="text-xs text-white/40 mt-1">
+              {config.bars.count}
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-white/60">Bar Color</label>
+            <input
+              type="color"
+              value={"#" + config.radial.color.toString(16).padStart(6, "0")}
+              onChange={(e) =>
+                updateConfig(
+                  "radial.color",
+                  parseInt(e.target.value.replace("#", ""), 16)
+                )
+              }
+              className="w-full h-10 rounded-lg border border-white/10 bg-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs text-white/60">Radial Size</label>
+            <input
+              type="range"
+              min={40}
+              max={200}
+              value={config.radial.innerRadius}
+              onChange={(e) =>
+                updateConfig("radial.innerRadius", Number(e.target.value))
+              }
+              className="w-full"
+            />
+            <div className="text-xs text-white/40 mt-1">
+              {config.radial.innerRadius}px
+            </div>
+          </div>
+
           <p className="text-xs text-white/50">
             Switch between classic horizontal bars and radial bars.
           </p>
         </Section>
 
         {/* Appearance */}
-        <Section title="Appearance">
+        {/* <Section title="Appearance">
           <div className="space-y-2">
             <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
               <div className="text-sm text-white/80">Background Image</div>
@@ -125,7 +205,7 @@ export function VisualizerControlsPanel({
               </div>
             </div>
           </div>
-        </Section>
+        </Section> */}
 
         {/* Status */}
         <Section title="Status">

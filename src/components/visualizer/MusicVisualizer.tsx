@@ -2,18 +2,20 @@ import { useEffect, useRef } from "react";
 import { Application } from "pixi.js";
 import { VisualizerEngine } from "../../visualizer/engine/VisualizerEngine";
 import { defaultConfig } from "../../visualizer/config/defaultConfig";
-import type { VisualizerMode } from "../../visualizer/engine/types";
+import type { VisualizerConfig, VisualizerMode } from "../../visualizer/engine/types";
 
 type Props = {
   demoAudio?: string;
   isPlaying: boolean;
   mode: VisualizerMode;
+  config: VisualizerConfig;
 };
 
 export function MusicVisualizer({
   demoAudio = "/demo/demo.mp3",
   isPlaying,
   mode,
+  config
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const appRef = useRef<Application | null>(null);
@@ -82,6 +84,13 @@ export function MusicVisualizer({
 
     void engine.setMode(mode);
   }, [mode]);
+
+  useEffect(() => {
+    const engine = engineRef.current;
+    if (!engine) return;
+  
+    engine.updateConfig(config);
+  }, [config]);
 
   return (
     <div className="h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl">

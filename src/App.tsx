@@ -2,10 +2,16 @@ import { useState } from "react";
 import { MusicVisualizer } from "./components/visualizer/MusicVisualizer";
 import { VisualizerControlsPanel } from "./components/visualizer/VisualizerControlsPanel";
 import type { VisualizerMode } from "./visualizer/engine/types";
+import { defaultConfig } from "./visualizer/config/defaultConfig";
+import { updateConfigValue } from "./visualizer/utils/updateConfig";
 
 export default function App() {
+  const [config, setConfig] = useState(defaultConfig);
   const [isPlaying, setIsPlaying] = useState(false);
   const [mode, setMode] = useState<VisualizerMode>("radial");
+  const updateConfig = (path: string, value: unknown) => {
+    setConfig((prev) => updateConfigValue(prev, path, value));
+  };
 
   return (
     <main className="h-screen w-screen bg-black text-white overflow-hidden">
@@ -19,6 +25,7 @@ export default function App() {
         {/* Visualizer */}
         <section className="min-h-0 min-w-0">
           <MusicVisualizer
+            config={config}
             isPlaying={isPlaying}
             mode={mode}
           />
@@ -28,8 +35,11 @@ export default function App() {
         <aside className="hidden min-h-0 md:block">
           <div className="h-full rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <VisualizerControlsPanel
+              config={config}
               isPlaying={isPlaying}
               mode={mode}
+              //onChangeConfig={setConfig}
+              updateConfig={updateConfig}
               onTogglePlay={() => setIsPlaying((p) => !p)}
               onChangeMode={setMode}
             />

@@ -83,6 +83,13 @@ export class VisualizerEngine {
     return this.config.mode;
   }
 
+  updateConfig(newConfig: VisualizerConfig) {
+    this.config = newConfig;
+  
+    // simplest version (safe for now)
+    void this.rebuildLayers();
+  }
+
   private async rebuildLayers() {
     for (const layer of this.layers) {
       layer.destroy();

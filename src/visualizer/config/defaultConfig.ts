@@ -12,13 +12,19 @@ export const defaultConfig: VisualizerConfig = {
   radial: {
     count: 96,
     color: 0xff4df0,
-    innerRadius: 110,
+    innerRadius: 50,
     maxLength: 140,
-    thickness: 4,
+    thickness: 8,
+    imageUrl: "/demo/demo.png", // optional
+    imageAlpha: 0.85,
   },
   background: {
     color: 0x1ff120,
     imageUrl: "/demo/demo.png", // optional
     imageAlpha: 0.85,
+    motion: {
+      parallaxStrength: 2, // pixels
+      bassShake: 8,
+    },
   },
 };

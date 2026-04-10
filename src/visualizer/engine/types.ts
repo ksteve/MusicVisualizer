@@ -23,11 +23,17 @@ export type VisualizerConfig = {
         innerRadius: number;
         maxLength: number;
         thickness: number;
+        imageUrl?: string;
+        imageAlpha: number;
     };
     background: {
         color: number;
         imageUrl?: string;
         imageAlpha: number;
+        motion: {
+            parallaxStrength: number; // slow drift
+            bassShake: number;        // vibration strength
+        };
     };
 };
 

@@ -1,4 +1,4 @@
-import { Container, Graphics, type Application } from "pixi.js";
+import { Assets, Container, Graphics, Sprite, Texture, type Application } from "pixi.js";
 import type { AudioFrame, VisualizerLayer } from "../engine/types";
 
 type RadialBarsLayerOptions = {
@@ -7,12 +7,16 @@ type RadialBarsLayerOptions = {
   innerRadius: number;
   maxLength: number;
   thickness: number;
+  imageUrl?: string;
+  imageAlpha: number;
 };
 
 export class RadialBarsLayer implements VisualizerLayer {
   container = new Container();
 
   private graphics = new Graphics();
+  private sprite: Sprite | null = null;
+  private texture: Texture | null = null;
   private options: RadialBarsLayerOptions;
   private width = 0;
   private height = 0;
@@ -22,8 +26,16 @@ export class RadialBarsLayer implements VisualizerLayer {
     this.container.addChild(this.graphics);
   }
 
-  mount(app: Application) {
+  async mount(app: Application) {
     app.stage.addChild(this.container);
+
+    if (this.options.imageUrl) {
+      this.texture = await Assets.load(this.options.imageUrl);
+     // this.sprite = new Sprite(texture);
+     // this.sprite.alpha = this.options.imageAlpha;
+   //   this.graphics.fill({ texture: this.texture, textureSpace: 'local'});
+    }
+
     this.resize(app.renderer.width, app.renderer.height);
   }
 
@@ -37,10 +49,11 @@ export class RadialBarsLayer implements VisualizerLayer {
 
     const cx = this.width / 2;
     const cy = this.height / 2;
-    const pulseRadius = innerRadius + bassLevel * 12;
+    const pulseRadius = innerRadius + bassLevel * 200;
 
     this.graphics.circle(cx, cy, pulseRadius);
     this.graphics.stroke({ width: 3, color, alpha: 0.3 });
+   // this.graphics.fill({ texture: this.texture, textureSpace: 'global'});
 
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2;
@@ -49,10 +62,10 @@ export class RadialBarsLayer implements VisualizerLayer {
 
       const barLength = Math.max(4, value * maxLength);
 
-      const x1 = cx + Math.cos(angle) * innerRadius;
-      const y1 = cy + Math.sin(angle) * innerRadius;
-      const x2 = cx + Math.cos(angle) * (innerRadius + barLength);
-      const y2 = cy + Math.sin(angle) * (innerRadius + barLength);
+      const x1 = cx + Math.cos(angle) * pulseRadius;
+      const y1 = cy + Math.sin(angle) * pulseRadius;
+      const x2 = cx + Math.cos(angle) * (pulseRadius + barLength);
+      const y2 = cy + Math.sin(angle) * (pulseRadius + barLength);
 
       this.graphics.moveTo(x1, y1);
       this.graphics.lineTo(x2, y2);
